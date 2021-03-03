@@ -1,4 +1,4 @@
-from typedproperty import String, Integer, Float
+from porty.typedproperty import String, Integer, Float
 
 
 class Stock:

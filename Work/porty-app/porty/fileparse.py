@@ -4,8 +4,16 @@
 
 import csv
 import io
+import logging
 
-def parse_csv(iterable, select=None, types=None, has_headers=True, delimiter=","):
+logging.basicConfig(
+    #filename = 'app.log',            # Name of the log file (omit to use stderr)
+    #filemode = 'w',                  # File mode (use 'a' to append)
+    level    = logging.DEBUG,      # Logging level (DEBUG, INFO, WARNING, ERROR, or CRITICAL)
+)
+log = logging.getLogger(__name__)
+
+def parse_csv(iterable, select=None, types=None, has_headers=True, delimiter=",", silence_errors=False):
     """Parse a csv file into a list of records
 
     select (list): Accepts a list of column names to select when opening the file
@@ -45,8 +53,10 @@ def parse_csv(iterable, select=None, types=None, has_headers=True, delimiter=","
             try:
                 row = [func(val) for func, val in zip(types, row)]
             except ValueError as e:
-                print(f"Row {i+1}: Couldn't convert {row}")
-                print(f"Row {i+1}: Reason {e}")
+                if not silence_errors:
+                    log.warning(f"Row {i+1}: Couldn't convert {row}")
+                    log.debug(f"Row {i+1}: Reason {e}")
+                continue
         # Make dictionary
         if header:
             record = dict(zip(header, row))
