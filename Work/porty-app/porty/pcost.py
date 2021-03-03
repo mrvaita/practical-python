@@ -2,7 +2,7 @@
 #
 # Exercise 1.27
 
-from report import read_portfolio
+from porty.report import read_portfolio
 
 
 def portfolio_cost(filename):
